@@ -3,8 +3,10 @@ using UnityStandardAssets.Characters.ThirdPerson;
 
 public class RandomMatchmaker : Photon.PunBehaviour
 {
-    private PhotonView myPhotonView;
+	public string playerPrefabName = "esCapeCharacter";
 	public Vector3 spawnPosition = new Vector3(1.26f, 1f, 1f);
+
+	private PhotonView myPhotonView;
 
     // Use this for initialization
     public void Start()
@@ -31,9 +33,11 @@ public class RandomMatchmaker : Photon.PunBehaviour
 
     public override void OnJoinedRoom()
     {
-        GameObject player = PhotonNetwork.Instantiate("esCapeCharacter", spawnPosition, Quaternion.identity, 0);
+        GameObject player = PhotonNetwork.Instantiate(playerPrefabName, spawnPosition, Quaternion.identity, 0);
 		esCapeCharacterController controller = player.GetComponent<esCapeCharacterController> ();
+		ThirdPersonCharacter animatorScript = player.GetComponent<ThirdPersonCharacter> ();
 		controller.enabled = true;
+		animatorScript.enabled = true;
 //        monster.GetComponent<myThirdPersonController>().isControllable = true;
 		myPhotonView = player.GetComponent<PhotonView>();
     }
@@ -41,19 +45,5 @@ public class RandomMatchmaker : Photon.PunBehaviour
     public void OnGUI()
     {
         GUILayout.Label(PhotonNetwork.connectionStateDetailed.ToString());
-
-        if (PhotonNetwork.inRoom)
-        {
-            bool shoutMarco = GameLogic.playerWhoIsIt == PhotonNetwork.player.ID;
-
-            if (shoutMarco && GUILayout.Button("Marco!"))
-            {
-                myPhotonView.RPC("Marco", PhotonTargets.All);
-            }
-            if (!shoutMarco && GUILayout.Button("Polo!"))
-            {
-                myPhotonView.RPC("Polo", PhotonTargets.All);
-            }
-        }
     }
 }
