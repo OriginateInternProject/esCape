@@ -36,8 +36,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
 //				m_CamForward = Vector3.Scale(m_Cam.forward, new Vector3(1, 0, 1)).normalized;
 //				m_Move = v*m_CamForward + h*Camera.main.transform.righ m_Cam.right;
 				Vector3 movement = Camera.main.transform.forward;
-				//transform.position += movement * speed * Time.deltaTime;
-				character.Move(movement, false, false);
+				transform.Translate (movement * speed * Time.deltaTime);
+				//character.Move(movement, false, false);
 			}
 		}
 	}
