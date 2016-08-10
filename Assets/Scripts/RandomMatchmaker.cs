@@ -1,10 +1,12 @@
 using UnityEngine;
+using System.Collections.Generic;
 using UnityStandardAssets.Characters.ThirdPerson;
 
 public class RandomMatchmaker : Photon.PunBehaviour
 {
 	public string playerPrefabName = "esCapeCharacter";
 	public Vector3 spawnPosition = new Vector3(1.26f, 1f, 1f);
+	public List<Vector3> spawnPoints;
 
 	private PhotonView myPhotonView;
 
@@ -33,12 +35,12 @@ public class RandomMatchmaker : Photon.PunBehaviour
 
     public override void OnJoinedRoom()
     {
-        GameObject player = PhotonNetwork.Instantiate(playerPrefabName, spawnPosition, Quaternion.identity, 0);
+		Vector3 spawnPoint = spawnPoints [0];
+		spawnPoints.RemoveAt (0);
+		GameObject player = PhotonNetwork.Instantiate(playerPrefabName, spawnPoint, Quaternion.identity, 0);
 		esCapeCharacterController controller = player.GetComponent<esCapeCharacterController> ();
 		ThirdPersonCharacter animatorScript = player.GetComponent<ThirdPersonCharacter> ();
 		controller.enabled = true;
-		animatorScript.enabled = true;
-//        monster.GetComponent<myThirdPersonController>().isControllable = true;
 		myPhotonView = player.GetComponent<PhotonView>();
     }
 
