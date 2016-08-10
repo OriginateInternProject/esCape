@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class ChaseController : MonoBehaviour {
 	public GameObject player;
-	public float moveSpeed;
+	public float moveSpeed = 5.0f;
 	public float staticAxis;
 	public int gridSize = 50;
 
@@ -27,9 +27,8 @@ public class ChaseController : MonoBehaviour {
 		trail = new Queue ();
 		seePlayer = false;
 		chase = false;
-		moveSpeed = 5.0f;
-		patrolPoint1 = new Vector3(34.35612f, -2.5f, 38.936936f);
-		patrolPoint2 = new Vector3(34.35612f, -2.5f, 6.8712240f);
+		patrolPoint1 = new Vector3(11.5f+2.3f, -2.5f, 2.3f);
+		patrolPoint2 = new Vector3(38.88f, -2.5f, 2.3f);
 		destination = patrolPoint2;
 	}
 
@@ -81,13 +80,8 @@ public class ChaseController : MonoBehaviour {
 	Vector3 roundPositionToGrid(Vector3 pos) {
 		int xInt = Mathf.RoundToInt (pos.x / scale);
 		int zInt = Mathf.RoundToInt (pos.z / scale);
-
-//		print ("xInt" + xInt);
-//		print ("zInt" + zInt);
 		float x = (float) grid [xInt];
 		float z = (float) grid [zInt];
-//		print ("X" + x);
-//		print ("z" + z);
 		return new Vector3 (x, y, z);
 	}
 
@@ -95,9 +89,18 @@ public class ChaseController : MonoBehaviour {
 		grid = new float[gridSize];
 		for (int i = 1; i <= gridSize-1; i++){
 			grid [i] = scale*i;
-			print ("i: " + i);
-			print ("scale: " + scale);
-			print (grid [i]);
+			Debug.Log ("i: " + i);
+			Debug.Log ("scale: " + scale);
+			Debug.Log (grid [i]);
+		}
+	}
+
+	void OnAnimatorMove() {
+		Animator animator = GetComponent<Animator> ();
+		if (animator) {
+			Vector3 newPosition = transform.position;
+			newPosition.z += animator.GetFloat ("RunSpeed") * Time.deltaTime;
+			transform.position = newPosition;
 		}
 	}
 }
