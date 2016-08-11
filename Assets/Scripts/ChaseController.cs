@@ -1,16 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class ChaseController : MonoBehaviour {
 	public GameObject player;
 	public float moveSpeed = 5.0f;
 	public float staticAxis;
 	public int gridSize = 50;
+	public Vector3 patrolPoint1;
+	public Vector3 patrolPoint2;
 
 	private Queue trail;
-	private Vector3 patrolPoint1;
-	private Vector3 patrolPoint2;
 	private Vector3 destination;
 	private bool seePlayer;
 	private float[] grid;
@@ -23,12 +24,10 @@ public class ChaseController : MonoBehaviour {
 	void Start () {
 		scale = 2.290408f;
 		setGrid ();
-		y = -2.5f;
+		y = -1.5f;
 		trail = new Queue ();
 		seePlayer = false;
 		chase = false;
-		patrolPoint1 = new Vector3(11.5f+2.3f, -2.5f, 2.3f);
-		patrolPoint2 = new Vector3(38.88f, -2.5f, 2.3f);
 		destination = patrolPoint2;
 	}
 
@@ -46,11 +45,10 @@ public class ChaseController : MonoBehaviour {
 		detectPlayer ();
 		if (seePlayer) { //chase action
 			Vector3 pos = roundPositionToGrid (player.transform.position);
-			Debug.Log (pos);
 //			Debug.Log (pos.z);
-//			if (Vector3.Distance (pos, transform.position) <= 1) {
-//				deathScene ();
-//			}
+			if (Vector3.Distance (player.transform.position, transform.position) <= 1) {
+				SceneManager.LoadScene (2);
+			}
 			if (!(trail.Contains (pos))) {
 				trail.Enqueue (pos);
 			}
@@ -72,7 +70,8 @@ public class ChaseController : MonoBehaviour {
 	}
 
 	void detectPlayer(){
-		if (Mathf.Abs(player.transform.position.x - patrolPoint1.x) <= 1) {
+		var playerPos = player.transform.position;
+		if (playerPos.x >= patrolPoint1.x - 0.5f && playerPos.x <= patrolPoint2.x + 0.5f && playerPos.z >= patrolPoint1.z - 0.5f && playerPos.z <= patrolPoint2.z + 0.5f) {
 			seePlayer = true;
 		}
 	}
@@ -89,9 +88,9 @@ public class ChaseController : MonoBehaviour {
 		grid = new float[gridSize];
 		for (int i = 1; i <= gridSize-1; i++){
 			grid [i] = scale*i;
-			Debug.Log ("i: " + i);
-			Debug.Log ("scale: " + scale);
-			Debug.Log (grid [i]);
+//			Debug.Log ("i: " + i);
+//			Debug.Log ("scale: " + scale);
+//			Debug.Log (grid [i]);
 		}
 	}
 

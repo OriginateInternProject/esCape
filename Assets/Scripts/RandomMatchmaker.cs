@@ -35,8 +35,9 @@ public class RandomMatchmaker : Photon.PunBehaviour
 
     public override void OnJoinedRoom()
     {
-		Vector3 spawnPoint = spawnPoints [0];
-		spawnPoints.RemoveAt (0);
+		int r = Random.Range (0, spawnPoints.Count);
+		Vector3 spawnPoint = spawnPoints [r];
+		//spawnPoints.RemoveAt (0);
 		GameObject player = PhotonNetwork.Instantiate(playerPrefabName, spawnPoint, Quaternion.identity, 0);
 		esCapeCharacterController controller = player.GetComponent<esCapeCharacterController> ();
 		ThirdPersonCharacter animatorScript = player.GetComponent<ThirdPersonCharacter> ();
